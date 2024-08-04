@@ -1,0 +1,41 @@
+@import url(../colors.css);
+
+footer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+.footer-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer-text {
+    margin: 0 0 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+}
+
+.footer-icon {
+    width: 4rem;
+    height: 4rem;
+    object-fit: cover;
+}
+
+.footer-link {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer-link :hover{
+    color: #D3D3D3;
+}

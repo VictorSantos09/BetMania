@@ -1,0 +1,21 @@
+/*
+    primary color: #453f78
+    white color: white
+    grey color: #D3D3D3
+*/
+
+.color-primary {
+  color: #453f78;
+}
+
+.bg-primary {
+  background-color: #453f78;
+}
+
+.color-white{
+    color: white;
+}
+
+.color-grey{
+    color: #D3D3D3;
+}

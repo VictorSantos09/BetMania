@@ -1,0 +1,19 @@
+.d-block{
+  display: block;
+}
+
+.d-flex{
+  display: flex;
+}
+
+.align-center{
+  text-align: center;
+}
+
+.justify-center{
+  justify-content: center;
+}
+
+.text-decoration-none{
+  text-decoration: none;
+}

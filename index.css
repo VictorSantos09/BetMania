@@ -1,0 +1,40 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 60px 20px 60px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+}
+
+.default-margin{
+  padding: 25px 60px 20px 60px;
+}
+
+.footer-apis{
+  padding-left: 60px;
+}
+
+.center-main-content{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  height: 70vh;
+}
