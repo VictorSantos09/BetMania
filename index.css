@@ -2,6 +2,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
+  background-color: #f4f4f4;
 }
 
 header {
@@ -31,10 +32,35 @@ header {
   padding-left: 60px;
 }
 
-.center-main-content{
+.center-main-content {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 50vh;
-  height: 70vh;
+  height: 100vh;
+  text-align: center;
+}
+
+.center-main-content div {
+  max-width: 80%;
+  margin: auto;
+}
+
+.justify-center {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.btn-jogar {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  color: #fff;
+  background-color: #FFC94A;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-jogar:hover {
+  background-color: #ffbd21;
 }
