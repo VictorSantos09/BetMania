@@ -6,8 +6,23 @@
   display: flex;
 }
 
+.g-3{
+  gap: 10rem;
+}
+
+.m-3{
+  margin: 10rem;
+}
+
+.p-2{
+  padding: 0.5rem;
+}
 .align-center{
   text-align: center;
+}
+
+.align-baseline{
+  align-items: baseline;
 }
 
 .justify-center{
