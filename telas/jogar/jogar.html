@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../index.css" />
-    <link rel="stylesheet" href="../colors.css" />
-    <link rel="stylesheet" href="../fonts.css" />
-    <link rel="stylesheet" href="../footer/footer.css" />
-    <link rel="stylesheet" href="../header/header.css" />
+    <link rel="stylesheet" href="../../index.css" />
+    <link rel="stylesheet" href="../../colors.css" />
+    <link rel="stylesheet" href="../../fonts.css" />
+    <link rel="stylesheet" href="../../footer/footer.css" />
+    <link rel="stylesheet" href="../../header/header.css" />
+    <link rel="stylesheet" href="../../helpers/display.helper.css" />
     <link rel="stylesheet" href="jogar.css" />
-    <link rel="stylesheet" href="../helpers/display.helper.css" />
 
     <!--Icons-->
     <link
@@ -18,10 +18,12 @@
     />
   </head>
   <body>
-    <script src="../loaders/footer.loader.js"></script>
-    <script src="../loaders/header.loader.js"></script>
+    <script src="../../loaders/footer.loader.js"></script>
+    <script src="../../loaders/header.loader.js"></script>
 
     <div id="header-placeholder"></div>
+
+    <button id="play">Jogar</button>
 
     <section class="center-main-content">
       <div class="game-info">
@@ -50,18 +52,36 @@
 
     <main class="d-flex g-3 justify-center m-3">
       <div class="card">
-        <img src="../assets/card.jpg" alt="game card image" width="100%" height="100%">
+        <img
+          src="../assets/card.jpg"
+          id="card-img-1"
+          alt="game card image"
+          width="100%"
+          height="100%"
+        />
       </div>
       <div class="card">
-        <img src="../assets/card.jpg" alt="game card image" width="100%" height="100%">
+        <img
+          src="../assets/card.jpg"
+          id="card-img-2"
+          alt="game card image"
+          width="100%"
+          height="100%"
+        />
       </div>
       <div class="card">
-        <img src="../assets/card.jpg" alt="game card image" width="100%" height="100%">
+        <img
+          src="../assets/card.jpg"
+          id="card-img-3"
+          alt="game card image"
+          width="100%"
+          height="100%"
+        />
       </div>
     </main>
 
     <div id="footer-placeholder"></div>
 
-    <script src="jogar.js"></script>
+    <script src="../jogar/js/jogar.js"></script>
   </body>
 </html>
