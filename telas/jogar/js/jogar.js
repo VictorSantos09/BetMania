@@ -1,12 +1,20 @@
 let idsCharacters = [];
 let idsCharactersPrevious = [];
-let correctAnswers;
+let correctCard;
 const apiUrl = "https://rickandmortyapi.com/api/character/";
 const cardImageId = "card-img-";
 const querySelectorCard = ".card";
 const pathCard = "/assets/card.png";
 const btnPlay = document.getElementById("play");
+const actualValueSpan = document.getElementById("actualValue");
+const factorValueSpan = document.getElementById("factor");
+let factorValue = randomize();
+let actualValue = factorValue / 100 + 1;
 const amountCards = 3;
+const awaitTimeMs = 5000;
+
+actualValueSpan.innerHTML = `R$ ${actualValue.toFixed(2)}`;
+factorValueSpan.innerHTML = `${factorValue}%`;
 
 setPlayButton();
 setImageTexture();
@@ -29,7 +37,7 @@ function shuffleCards() {
       randomIndex;
 
     while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
+      randomIndex = randomize(currentIndex);
       currentIndex--;
 
       [array[currentIndex], array[randomIndex]] = [
@@ -74,10 +82,10 @@ function setRandomIds() {
   idsCharactersPrevious = idsCharacters;
   idsCharacters = [];
 
-  const maxCharactersApi = 826;
+  let maxCharactersApi = 826;
 
   while (idsCharacters.length < 3) {
-    const randomId = Math.floor(Math.random() * maxCharactersApi) + 1;
+    let randomId = randomize(maxCharactersApi) + 1;
     if (!idsCharacters.includes(randomId)) {
       idsCharacters.push(randomId);
     }
@@ -94,6 +102,10 @@ function setImageTexture() {
 //#region Utils
 function getCards() {
   return document.querySelectorAll(querySelectorCard);
+}
+
+function randomize(factor = 100) {
+  return Math.floor(Math.random() * factor);
 }
 
 function changeCardImage(src, alt) {
@@ -115,10 +127,14 @@ function setPlayButton() {
     setRandomIds();
     setImageCharacter();
 
+    setCorrectAnswer();
+    showCorrectAnswer();
+
     setTimeout(() => {
+      hideCorrectAnswer();
+      setImageTexture();
       shuffleCards();
-      // setImageTexture();
-    }, 5000);
+    }, awaitTimeMs);
 
     setCardClick();
   });
@@ -132,9 +148,61 @@ function setPlayButton() {
 
     cards.forEach((card) => {
       card.addEventListener("click", () => {
+        if (card === correctCard) {
+          alert("Acertou!");
+
+          if (actualValue <= 0 || !actualValue) {
+            actualValue = 1;
+          } else {
+            actualValue = actualValue + actualValue * (factorValue / 100);
+          }
+
+          actualValue = parseFloat(actualValue).toFixed(2);
+        } else {
+          alert("Errou!");
+
+          if (actualValue <= 0 || !actualValue) {
+            actualValue = 0;
+          } else {
+            actualValue = actualValue - actualValue * (factorValue / 100);
+          }
+
+          actualValue = parseFloat(actualValue).toFixed(2);
+        }
+
+        factorValue = randomize();
+        factorValueSpan.innerHTML = `${factorValue}%`;
+        actualValueSpan.innerHTML = `R$ ${actualValue}`;
+
         setRandomIds();
         setImageCharacter();
+        setCorrectAnswer();
+        showCorrectAnswer();
+
+        setTimeout(() => {
+          hideCorrectAnswer();
+          setImageTexture();
+          shuffleCards();
+        }, awaitTimeMs / 2);
       });
     });
   }
 }
+
+//#region Correct Answer
+function setCorrectAnswer() {
+  let cards = getCards();
+  let randomIndex = randomize(cards.length);
+  correctCard = cards[randomIndex];
+}
+
+function showCorrectAnswer() {
+  correctCard.classList.add("correct-answer");
+}
+
+function hideCorrectAnswer() {
+  correctCard.classList.remove("correct-answer");
+}
+//#endregion
+
+//#endregion
