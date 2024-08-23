@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="../../footer/footer.css" />
     <link rel="stylesheet" href="../../header/header.css" />
     <link rel="stylesheet" href="../../helpers/display.helper.css" />
-    <link rel="stylesheet" href="jogar.css" />
+    <link rel="stylesheet" href="./jogar.css" />
 
     <!--Icons-->
     <link
@@ -18,10 +18,18 @@
     />
   </head>
   <body>
-    <script src="../../loaders/footer.loader.js"></script>
-    <script src="../../loaders/header.loader.js"></script>
-
-    <div id="header-placeholder"></div>
+    <header class="bg-primary">
+      <a href="../../index.html" style="text-decoration: none">
+        <div class="title color-white">BetMania</div>
+      </a>
+      <a href="https://github.com/VictorSantos09/BetMania" target="_blank">
+        <img
+          src="../../assets/github-icon.png"
+          alt="GitHub Logo"
+          class="logo"
+        />
+      </a>
+    </header>
 
     <button id="play">Jogar</button>
 
@@ -52,36 +60,43 @@
 
     <main class="d-flex g-3 justify-center m-3">
       <div class="card">
-        <img
-          src="../assets/card.jpg"
-          id="card-img-1"
-          alt="game card image"
-          width="100%"
-          height="100%"
-        />
+        <img id="card-img-1" alt="game card image" width="100%" height="100%" />
       </div>
       <div class="card">
-        <img
-          src="../assets/card.jpg"
-          id="card-img-2"
-          alt="game card image"
-          width="100%"
-          height="100%"
-        />
+        <img id="card-img-2" alt="game card image" width="100%" height="100%" />
       </div>
       <div class="card">
-        <img
-          src="../assets/card.jpg"
-          id="card-img-3"
-          alt="game card image"
-          width="100%"
-          height="100%"
-        />
+        <img id="card-img-3" alt="game card image" width="100%" height="100%" />
       </div>
     </main>
 
-    <div id="footer-placeholder"></div>
+    <footer class="bg-primary">
+      <div class="footer-column">
+        <a href="https://disneyapi.dev" target="_blank" class="footer-link">
+          <p class="footer-text">Disney API</p>
+          <img
+            src="../../assets/mickey-mouse-icon.png"
+            alt="Mickey Mouse Icon"
+            class="footer-icon"
+          />
+        </a>
+      </div>
+      <div class="footer-column">
+        <a
+          href="https://bymykel.github.io/CSGO-API/?ref=public_apis"
+          target="_blank"
+          class="footer-link"
+        >
+          <p class="footer-text">CS:GO API</p>
+          <img
+            src="../../assets/CSGO_API.ico"
+            alt="CS:GO Icon"
+            class="footer-icon"
+          />
+        </a>
+      </div>
+    </footer>
 
-    <script src="../jogar/js/jogar.js"></script>
+    <script src="./js/jogar.js"></script>
   </body>
 </html>
