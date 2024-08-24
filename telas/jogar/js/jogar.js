@@ -1,31 +1,34 @@
-let idsCharacters = [];
-let idsCharactersPrevious = [];
-let correctCard;
+const gameState = {
+  idsCharacters: [],
+  idsCharactersPrevious: [],
+  correctCard: null,
+  factorValue: randomize(),
+  actualValue: 1,
+};
+
 const apiUrl = "https://rickandmortyapi.com/api/character/";
 const cardImageId = "card-img-";
 const querySelectorCard = ".card";
-const pathCard = "../../assets/card.png";
+const pathCard =
+  "https://raw.githubusercontent.com/VictorSantos09/BetMania/main/assets/card.png";
 const btnPlay = document.getElementById("play");
 const actualValueSpan = document.getElementById("actualValue");
 const factorValueSpan = document.getElementById("factor");
-let factorValue = randomize();
-let actualValue = factorValue / 100 + 1;
 const amountCards = 3;
-const awaitTimeMs = 5000;
+const largeAwaitTimeMs = 4500;
+const mediumAwaitTimeMs = largeAwaitTimeMs / 2;
+const smallAwaitTime = mediumAwaitTimeMs / 2;
 
-actualValueSpan.innerHTML = `R$ ${actualValue.toFixed(2)}`;
-factorValueSpan.innerHTML = `${factorValue}%`;
-
+updateValuesUI();
 setPlayButton();
 setImageTexture();
 
 //#region Shuffle
 function shuffleCards() {
-  let cardContainer = document.querySelector("main");
-  let cards = getCards();
+  const cardContainer = document.querySelector("main");
+  const cards = getCards();
 
-  let cardsArray = Array.from(cards);
-  let shuffledArray = shuffleArray(cardsArray);
+  const shuffledArray = shuffleArray(Array.from(cards));
 
   cardContainer.innerHTML = "";
   shuffledArray.forEach((card) => {
@@ -49,178 +52,230 @@ function shuffleCards() {
     return array;
   }
 }
-
 //#endregion
 
 //#region Set Image Character
-function setImageCharacter() {
-  fetch(getApiUrlBuild())
-    .then((response) => response.json())
-    .then((data) => {
-      let imgId = 1;
+async function setImageCharacter() {
+  try {
+    const response = await fetch(getApiUrlBuild());
+    const data = await response.json();
+    if (data.length < amountCards) {
+      throw new Error("Número insuficiente de personagens retornados pela API");
+    }
 
-      for (let index = 0; index < amountCards; index++) {
-        let character = data[index];
+    for (let index = 0; index < amountCards; index++) {
+      const character = data[index];
+      const cardImg = document.getElementById(cardImageId + (index + 1));
+      const cardImgBack = document.getElementById(
+        "card-img-back-" + (index + 1)
+      );
 
-        let cardImg = document.getElementById(cardImageId + imgId);
-        cardImg.src = character.image;
-        cardImg.alt = character.name;
-
-        imgId++;
-      }
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+      cardImg.src = character.image;
+      cardImg.alt = character.name;
+      cardImgBack.src = character.image;
+      cardImgBack.alt = character.name;
+    }
+  } catch (error) {
+    console.error("Erro:", error);
+  }
 }
 
 function getApiUrlBuild() {
-  return apiUrl + idsCharacters.join(",");
+  return apiUrl + gameState.idsCharacters.join(",");
 }
 
 function setRandomIds() {
-  idsCharactersPrevious = idsCharacters;
-  idsCharacters = [];
+  gameState.idsCharactersPrevious = [...gameState.idsCharacters];
+  gameState.idsCharacters = [];
 
-  let maxCharactersApi = 826;
+  const maxCharactersApi = 826;
 
-  while (idsCharacters.length < 3) {
-    let randomId = randomize(maxCharactersApi) + 1;
-    if (!idsCharacters.includes(randomId)) {
-      idsCharacters.push(randomId);
+  while (gameState.idsCharacters.length < amountCards) {
+    const randomId = randomize(maxCharactersApi) + 1;
+    if (!gameState.idsCharacters.includes(randomId)) {
+      gameState.idsCharacters.push(randomId);
     }
   }
 }
 //#endregion
 
 //#region Set Image Texture
-function setImageTexture() {
-  changeCardImage(pathCard, "Rick and Morty Card");
+async function setImageTexture() {
+  await changeCardImage(pathCard);
 }
 //#endregion
 
 //#region Utils
+function showCorrectAnswerTemporary() {
+  return new Promise((resolve) => {
+    showCorrectAnswer();
+    setTimeout(() => {
+      hideCorrectAnswer();
+      resolve();
+    }, smallAwaitTime);
+  });
+}
+
+function showBothWrongCorrectTemporary(card) {
+  return new Promise((resolve) => {
+    showCorrectAnswer();
+    showWrongAnswer(card);
+    setTimeout(() => {
+      hideCorrectAnswer();
+      hideWrongAnswer(card);
+      resolve();
+    }, smallAwaitTime);
+  });
+}
+
 function getCards() {
   return document.querySelectorAll(querySelectorCard);
+}
+
+function flipCard(card) {
+  card.querySelector(".card-inner").classList.toggle("card-flip");
+}
+
+function undoFlipCard(card) {
+  const cardInner = card.querySelector(".card-inner");
+  cardInner.classList.toggle("card-flip");
 }
 
 function randomize(factor = 100) {
   return Math.floor(Math.random() * factor);
 }
 
-function changeCardImage(src, alt) {
+async function changeCardImage(src) {
   let imgId = 1;
 
-  // Fetch the image
-  fetch(
-    "https://raw.githubusercontent.com/VictorSantos09/BetMania/main/assets/card.png"
-  )
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("problema na resposta do servidor");
-      }
-      return response.blob();
-    })
-    .then((imageBlob) => {
-      const imageObjectURL = URL.createObjectURL(imageBlob);
+  try {
+    const response = await fetch(src);
+    if (!response.ok) {
+      throw new Error("Problema na resposta do servidor");
+    }
+    const imageBlob = await response.blob();
+    const imageObjectURL = URL.createObjectURL(imageBlob);
 
-      for (let index = 0; index < amountCards; index++) {
-        let cardImg = document.getElementById(cardImageId + imgId);
-        cardImg.src = imageObjectURL;
-        cardImg.alt = alt;
-        imgId++;
-      }
-    })
-    .catch((error) => {
-      console.error("Não foi possível fazer a requisição:", error);
-    });
+    for (let index = 0; index < amountCards; index++) {
+      const cardImg = document.getElementById(cardImageId + imgId);
+      cardImg.src = imageObjectURL;
+      imgId++;
+    }
+  } catch (error) {
+    console.error("Não foi possível fazer a requisição:", error);
+  }
 }
-
 //#endregion
 
 //#region Rules
 function setPlayButton() {
-  btnPlay.addEventListener("click", () => {
+  btnPlay.addEventListener("click", async () => {
     hidePlayButton();
     setRandomIds();
-    setImageCharacter();
+    await setImageCharacter();
+    setCorrectAnswer();
+    await showCorrectAnswerTemporary();
 
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        hideCorrectAnswer();
+        await setImageTexture();
+        shuffleCards();
+        setCardClick();
+        resolve();
+      }, largeAwaitTimeMs);
+    });
+  });
+}
+
+function hidePlayButton() {
+  btnPlay.style.display = "none";
+}
+
+function setCardClick() {
+  const cards = getCards();
+
+  cards.forEach((card) => {
+    card.addEventListener("click", () => {
+      flipCard(card);
+
+      setTimeout(async () => {
+        await continuar(card);
+        undoFlipCard(card);
+      }, smallAwaitTime);
+    });
+  });
+
+  async function continuar(card) {
+    if (card === gameState.correctCard) {
+      await showCorrectAnswerTemporary();
+
+      gameState.actualValue =
+        gameState.actualValue <= 0 || !gameState.actualValue
+          ? 1
+          : parseFloat(
+              gameState.actualValue +
+                gameState.actualValue * (gameState.factorValue / 100)
+            ).toFixed(2);
+    } else {
+      await showBothWrongCorrectTemporary(card);
+
+      gameState.actualValue =
+        gameState.actualValue <= 0 || !gameState.actualValue
+          ? 0
+          : parseFloat(
+              gameState.actualValue -
+                gameState.actualValue * (gameState.factorValue / 100)
+            ).toFixed(2);
+    }
+
+    updateValuesUI();
+    setRandomIds();
+    await setImageCharacter();
     setCorrectAnswer();
     showCorrectAnswer();
 
-    setTimeout(() => {
-      hideCorrectAnswer();
-      setImageTexture();
-      shuffleCards();
-    }, awaitTimeMs);
-
-    setCardClick();
-  });
-
-  function hidePlayButton() {
-    btnPlay.style.display = "none";
-  }
-
-  function setCardClick() {
-    const cards = getCards();
-
-    cards.forEach((card) => {
-      card.addEventListener("click", () => {
-        if (card === correctCard) {
-          alert("Acertou!");
-
-          if (actualValue <= 0 || !actualValue) {
-            actualValue = 1;
-          } else {
-            actualValue = actualValue + actualValue * (factorValue / 100);
-          }
-
-          actualValue = parseFloat(actualValue).toFixed(2);
-        } else {
-          alert("Errou!");
-
-          if (actualValue <= 0 || !actualValue) {
-            actualValue = 0;
-          } else {
-            actualValue = actualValue - actualValue * (factorValue / 100);
-          }
-
-          actualValue = parseFloat(actualValue).toFixed(2);
-        }
-
-        factorValue = randomize();
-        factorValueSpan.innerHTML = `${factorValue}%`;
-        actualValueSpan.innerHTML = `R$ ${actualValue}`;
-
-        setRandomIds();
-        setImageCharacter();
-        setCorrectAnswer();
-        showCorrectAnswer();
-
-        setTimeout(() => {
-          hideCorrectAnswer();
-          setImageTexture();
-          shuffleCards();
-        }, awaitTimeMs / 2);
-      });
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        hideCorrectAnswer();
+        await setImageTexture();
+        shuffleCards();
+        resolve();
+      }, largeAwaitTimeMs / 2);
     });
   }
 }
+//#endregion
 
 //#region Correct Answer
 function setCorrectAnswer() {
-  let cards = getCards();
-  let randomIndex = randomize(cards.length);
-  correctCard = cards[randomIndex];
+  const cards = getCards();
+  const randomIndex = randomize(cards.length);
+  gameState.correctCard = cards[randomIndex];
 }
 
 function showCorrectAnswer() {
-  correctCard.classList.add("correct-answer");
+  gameState.correctCard.classList.add("correct-answer");
 }
 
 function hideCorrectAnswer() {
-  correctCard.classList.remove("correct-answer");
+  gameState.correctCard.classList.remove("correct-answer");
 }
 //#endregion
 
+//#region Wrong Answer
+function showWrongAnswer(wrongCard) {
+  wrongCard.classList.add("wrong-answer");
+}
+
+function hideWrongAnswer(wrongCard) {
+  wrongCard.classList.remove("wrong-answer");
+}
 //#endregion
+
+function updateValuesUI() {
+  factorValueSpan.innerHTML = `${gameState.factorValue}%`;
+  actualValueSpan.innerHTML = `R$ ${parseFloat(gameState.actualValue).toFixed(
+    2
+  )}`;
+}
