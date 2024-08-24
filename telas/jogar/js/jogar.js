@@ -19,6 +19,7 @@ const largeAwaitTimeMs = 4500;
 const mediumAwaitTimeMs = largeAwaitTimeMs / 2;
 const smallAwaitTime = mediumAwaitTimeMs / 2;
 
+// Inicializa valores de UI e configura o botão de play
 updateValuesUI();
 setPlayButton();
 setImageTexture();
@@ -26,29 +27,25 @@ setImageTexture();
 //#region Shuffle
 function shuffleCards() {
   const cardContainer = document.querySelector("main");
-  const cards = getCards();
+  const cards = Array.from(getCards());
+  const shuffledArray = shuffleArray(cards);
 
-  const shuffledArray = shuffleArray(Array.from(cards));
-
+  const fragment = document.createDocumentFragment();
+  shuffledArray.forEach((card) => fragment.appendChild(card));
   cardContainer.innerHTML = "";
-  shuffledArray.forEach((card) => {
-    cardContainer.appendChild(card);
-  });
+  cardContainer.appendChild(fragment);
 
   function shuffleArray(array) {
-    let currentIndex = array.length,
-      randomIndex;
-
-    while (currentIndex !== 0) {
+    let currentIndex = array.length;
+    let randomIndex;
+    while (currentIndex > 0) {
       randomIndex = randomize(currentIndex);
       currentIndex--;
-
       [array[currentIndex], array[randomIndex]] = [
         array[randomIndex],
         array[currentIndex],
       ];
     }
-
     return array;
   }
 }
@@ -58,25 +55,26 @@ function shuffleCards() {
 async function setImageCharacter() {
   try {
     const response = await fetch(getApiUrlBuild());
+    if (!response.ok) throw new Error("Falha na requisição da API");
     const data = await response.json();
-    if (data.length < amountCards) {
-      throw new Error("Número insuficiente de personagens retornados pela API");
-    }
+    if (data.length < amountCards)
+      throw new Error("Número insuficiente de personagens");
 
-    for (let index = 0; index < amountCards; index++) {
-      const character = data[index];
+    data.slice(0, amountCards).forEach((character, index) => {
       const cardImg = document.getElementById(cardImageId + (index + 1));
       const cardImgBack = document.getElementById(
         "card-img-back-" + (index + 1)
       );
 
-      cardImg.src = character.image;
-      cardImg.alt = character.name;
-      cardImgBack.src = character.image;
-      cardImgBack.alt = character.name;
-    }
+      if (cardImg && cardImgBack) {
+        cardImg.src = character.image;
+        cardImg.alt = character.name;
+        cardImgBack.src = character.image;
+        cardImgBack.alt = character.name;
+      }
+    });
   } catch (error) {
-    console.error("Erro:", error);
+    console.error("Erro ao definir imagem dos personagens:", error);
   }
 }
 
@@ -142,27 +140,31 @@ function undoFlipCard(card) {
 }
 
 function randomize(factor = 100) {
-  return Math.floor(Math.random() * factor);
+  if (factor <= 0) {
+    throw new Error("O valor do fator deve ser maior que 0");
+  }
+  const array = new Uint32Array(1);
+  window.crypto.getRandomValues(array);
+  return array[0] % factor;
 }
 
 async function changeCardImage(src) {
   let imgId = 1;
-
   try {
     const response = await fetch(src);
-    if (!response.ok) {
-      throw new Error("Problema na resposta do servidor");
-    }
+    if (!response.ok) throw new Error("Problema na resposta do servidor");
     const imageBlob = await response.blob();
     const imageObjectURL = URL.createObjectURL(imageBlob);
 
     for (let index = 0; index < amountCards; index++) {
       const cardImg = document.getElementById(cardImageId + imgId);
-      cardImg.src = imageObjectURL;
-      imgId++;
+      if (cardImg) {
+        cardImg.src = imageObjectURL;
+        imgId++;
+      }
     }
   } catch (error) {
-    console.error("Não foi possível fazer a requisição:", error);
+    console.error("Não foi possível fazer a requisição da imagem:", error);
   }
 }
 //#endregion
@@ -176,7 +178,7 @@ function setPlayButton() {
     setCorrectAnswer();
     await showCorrectAnswerTemporary();
 
-    return new Promise((resolve) => {
+    await new Promise((resolve) => {
       setTimeout(async () => {
         hideCorrectAnswer();
         await setImageTexture();
@@ -196,20 +198,22 @@ function setCardClick() {
   const cards = getCards();
 
   cards.forEach((card) => {
-    card.addEventListener("click", () => {
+    card.addEventListener("click", async () => {
       flipCard(card);
 
-      setTimeout(async () => {
-        await continuar(card);
-        undoFlipCard(card);
-      }, smallAwaitTime);
+      await new Promise((resolve) => {
+        setTimeout(async () => {
+          await continuar(card);
+          undoFlipCard(card);
+          resolve();
+        }, smallAwaitTime);
+      });
     });
   });
 
   async function continuar(card) {
     if (card === gameState.correctCard) {
       await showCorrectAnswerTemporary();
-
       gameState.actualValue =
         gameState.actualValue <= 0 || !gameState.actualValue
           ? 1
@@ -219,7 +223,6 @@ function setCardClick() {
             ).toFixed(2);
     } else {
       await showBothWrongCorrectTemporary(card);
-
       gameState.actualValue =
         gameState.actualValue <= 0 || !gameState.actualValue
           ? 0
@@ -235,7 +238,7 @@ function setCardClick() {
     setCorrectAnswer();
     showCorrectAnswer();
 
-    return new Promise((resolve) => {
+    await new Promise((resolve) => {
       setTimeout(async () => {
         hideCorrectAnswer();
         await setImageTexture();
@@ -255,11 +258,15 @@ function setCorrectAnswer() {
 }
 
 function showCorrectAnswer() {
-  gameState.correctCard.classList.add("correct-answer");
+  if (gameState.correctCard) {
+    gameState.correctCard.classList.add("correct-answer");
+  }
 }
 
 function hideCorrectAnswer() {
-  gameState.correctCard.classList.remove("correct-answer");
+  if (gameState.correctCard) {
+    gameState.correctCard.classList.remove("correct-answer");
+  }
 }
 //#endregion
 
