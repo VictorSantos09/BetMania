@@ -4,7 +4,7 @@ let correctCard;
 const apiUrl = "https://rickandmortyapi.com/api/character/";
 const cardImageId = "card-img-";
 const querySelectorCard = ".card";
-const pathCard = "../../../assets/card.png";
+const pathCard = "../../assets/card.png";
 const btnPlay = document.getElementById("play");
 const actualValueSpan = document.getElementById("actualValue");
 const factorValueSpan = document.getElementById("factor");
@@ -110,14 +110,32 @@ function randomize(factor = 100) {
 
 function changeCardImage(src, alt) {
   let imgId = 1;
-  for (let index = 0; index < amountCards; index++) {
-    let cardImg = document.getElementById(cardImageId + imgId);
-    cardImg.src = src;
-    cardImg.alt = alt;
 
-    imgId++;
-  }
+  // Fetch the image
+  fetch(
+    "https://raw.githubusercontent.com/VictorSantos09/BetMania/main/assets/card.png"
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("problema na resposta do servidor");
+      }
+      return response.blob();
+    })
+    .then((imageBlob) => {
+      const imageObjectURL = URL.createObjectURL(imageBlob);
+
+      for (let index = 0; index < amountCards; index++) {
+        let cardImg = document.getElementById(cardImageId + imgId);
+        cardImg.src = imageObjectURL;
+        cardImg.alt = alt;
+        imgId++;
+      }
+    })
+    .catch((error) => {
+      console.error("Não foi possível fazer a requisição:", error);
+    });
 }
+
 //#endregion
 
 //#region Rules
