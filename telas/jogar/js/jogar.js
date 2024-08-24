@@ -4,8 +4,7 @@ let correctCard;
 const apiUrl = "https://rickandmortyapi.com/api/character/";
 const cardImageId = "card-img-";
 const querySelectorCard = ".card";
-const pathCard =
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Playing_card_spade_7.svg/384px-Playing_card_spade_7.svg.png";
+const pathCard = "../../../assets/card.png";
 const btnPlay = document.getElementById("play");
 const actualValueSpan = document.getElementById("actualValue");
 const factorValueSpan = document.getElementById("factor");
