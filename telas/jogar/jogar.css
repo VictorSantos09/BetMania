@@ -17,23 +17,9 @@
 }
 
 .game-info {
-  background-color: #ffffff;
+  background: white;
+  padding: 10px;
   border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
-  width: 100%;
-}
-
-.center-main-content {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  text-align: right;
-  border-radius: 10px;
-  padding: 20px;
-  max-width: 400px;
-  width: auto;
 }
 
 .balance-factor {
@@ -41,7 +27,7 @@
 }
 
 .balance-factor p {
-  font-size: 1.2rem;
+  font-size: 1.4rem; /* Aumenta o tamanho da fonte */
   margin: 10px 0;
 }
 
@@ -57,6 +43,11 @@
 .next-level p {
   margin: 5px 0;
   color: #555;
+}
+
+.icon-gift {
+  color: red;
+  margin-left: 0.5rem;
 }
 
 .correct-answer {

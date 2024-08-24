@@ -1,7 +1,10 @@
 body {
-  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
+  font-family: Arial, sans-serif;
   background-color: #f4f4f4;
 }
 
@@ -24,19 +27,38 @@ header {
   height: 40px;
 }
 
-.default-margin{
+.default-margin {
   padding: 25px 60px 20px 60px;
 }
 
-.footer-apis{
+header,
+footer {
+  background-color: #f8f9fa;
+  padding: 20px 60px;
+  text-align: center;
+  border-bottom: 1px solid #dee2e6;
+}
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.footer-apis {
   padding-left: 60px;
+}
+
+footer {
+  margin-top: auto;
+  background-color: #453f78;
+  color: white;
+  text-align: center;
 }
 
 .center-main-content {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  padding: 20px;
   text-align: center;
 }
 
@@ -50,15 +72,8 @@ header {
   line-height: 1.5;
 }
 
-.btn-jogar {
-  margin-top: 20px;
-  padding: 10px 20px;
-  font-size: 1.8rem;
-  color: #fff;
-  background-color: #FFC94A;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+.btn-jogar:active {
+  background-color: #ffbd21;
 }
 
 .btn-jogar:hover {

@@ -31,8 +31,6 @@
       </a>
     </header>
 
-    <button id="play">Jogar</button>
-
     <section class="center-main-content">
       <div class="game-info">
         <div class="balance-factor">
@@ -40,25 +38,24 @@
           <p class="font-bold">Fator: <span id="factor">0%</span></p>
         </div>
         <div class="next-level">
-          <span class="d-flex align-baseline">
-            <p>Você possui 5</p>
-            <i
-              class="fa fa-gift"
-              style="font-size: 30px; color: red; margin-left: 0.3rem"
-            ></i>
-          </span>
-          <span class="d-flex align-baseline">
-            <p>Acerte 5 para o próximo</p>
-            <i
-              class="fa fa-gift"
-              style="font-size: 30px; color: red; margin-left: 0.3rem"
-            ></i>
-          </span>
+          <div class="level-info d-flex align-center">
+            <p>
+              Você possui 5
+              <i class="fa fa-gift icon-gift" style="font-size: x-large"></i>
+            </p>
+          </div>
+          <div class="level-info d-flex align-center">
+            <p>
+              Acerte 5 para o próximo
+
+              <i class="fa fa-gift icon-gift" style="font-size: x-large"></i>
+            </p>
+          </div>
         </div>
       </div>
     </section>
 
-    <main class="d-flex g-3 justify-center m-3">
+    <main class="d-flex g-3 justify-center">
       <div class="card">
         <img id="card-img-1" alt="game card image" width="100%" height="100%" />
       </div>
@@ -69,6 +66,10 @@
         <img id="card-img-3" alt="game card image" width="100%" height="100%" />
       </div>
     </main>
+
+    <div class="d-flex justify-center">
+      <button id="play" class="btn mb-3">Jogar</button>
+    </div>
 
     <footer class="bg-primary">
       <div class="footer-column">
