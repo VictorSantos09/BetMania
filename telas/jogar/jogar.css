@@ -1,3 +1,4 @@
+/* Estilos básicos para o card */
 .card {
   width: 298px;
   height: 500px;
@@ -93,8 +94,7 @@
   font-weight: bold;
 }
 
-/* Modal */
-/* Estilo para o modal */
+/* Estilos para o modal */
 .modal {
   display: none; /* Escondido por padrão */
   position: fixed; /* Fica fixo na tela */
@@ -107,6 +107,10 @@
   background-color: rgba(0, 0, 0, 0.5); /* Fundo escurecido */
 }
 
+.modal-open {
+  display: block; /* Exibe o modal */
+}
+
 /* Estilo para o conteúdo do modal */
 .modal-content {
   background-color: #fff;
@@ -117,6 +121,30 @@
   max-width: 800px; /* Limite máximo de largura */
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
   animation: modalopen 0.5s; /* Animação de abertura */
+}
+
+.modal-content input[type="text"] {
+  width: calc(100% - 20px);
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.modal-content button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-content button:hover {
+  background-color: #0056b3;
 }
 
 /* Animação de abertura do modal */

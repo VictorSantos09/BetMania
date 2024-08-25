@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -40,12 +40,27 @@
           <button id="closeModalBtn">Fechar</button>
         </div>
       </div>
+
+      <!-- Modal input -->
+      <div id="modalInputSaldo" class="modal modal-open">
+        <div class="modal-content">
+          <h1>Adicione o saldo</h1>
+          <div>
+            <input
+              type="text"
+              id="inputSaldo"
+              placeholder="Digite o valor desejado. Ex: 100,00"
+            />
+          </div>
+          <button id="btnConfirmarSaldo">Confirmar</button>
+        </div>
+      </div>
     </section>
     <section class="center-main-content">
       <div class="game-info">
         <div class="balance-factor">
-          <p class="font-bold">Saldo: <span id="actualValue">$0,00</span></p>
-          <p class="font-bold">Fator: <span id="factor">0%</span></p>
+          <p class="font-bold"><span id="actualValue">$0,00</span></p>
+          <p class="font-bold"><span id="factor">0%</span></p>
         </div>
         <div class="next-level">
           <div class="level-info d-flex align-center">
@@ -57,6 +72,7 @@
             <i class="fa fa-gift icon-gift" style="font-size: x-large"></i>
           </div>
         </div>
+        <button class="btn btn-sm" id="btnVerPresentes">Meus presentes</button>
         <h3 id="countdown"></h3>
       </div>
     </section>

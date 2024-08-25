@@ -26,10 +26,52 @@ const btnPlay = document.getElementById("play");
 const actualValueSpan = document.getElementById("actualValue");
 const factorValueSpan = document.getElementById("factor");
 
-// Inicializa valores de UI e configura o botão de play
-updateValuesUI();
-setPlayButton();
+const input = document.getElementById("inputSaldo");
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Inicializa valores de UI e configura o botão de play
+  configureModalSaldo();
+  updateValuesUI();
+  setPlayButton();
+});
 setImageTexture();
+
+function configureModalSaldo() {
+  input.addEventListener("input", function () {
+    let value = input.value;
+
+    // Remove tudo que não é número ou vírgula
+    value = value.replace(/\D/g, "");
+
+    // Converte o valor para um número e define a precisão
+    let numericValue = parseFloat(value) / 100;
+
+    const formattedValue = new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(numericValue);
+
+    input.value = formattedValue;
+    gameState.actualValue = numericValue;
+  });
+
+  const modalInputSaldo = document.getElementById("modalInputSaldo");
+  const btnConfirmarSaldo = document.getElementById("btnConfirmarSaldo");
+  const inputSaldo = document.getElementById("inputSaldo");
+
+  btnConfirmarSaldo.addEventListener("click", () => {
+    const saldo = inputSaldo.value;
+
+    if (saldo) {
+      updateValuesUI();
+      closeModal(modalInputSaldo);
+    }
+  });
+
+  document
+    .getElementById("btnVerPresentes")
+    .addEventListener("click", () => showGifts());
+}
 
 //#region Shuffle
 function shuffleCards() {
@@ -222,7 +264,7 @@ function setCardClick() {
   });
 
   async function continuar(card) {
-    gameState.actualValue = parseFloat(gameState.actualValue);
+    gameState.actualValue = parseFloat(gameState.actualValue.toFixed(2));
 
     if (card === gameState.correctCard) {
       await showCorrectAnswerTemporary();
@@ -234,7 +276,7 @@ function setCardClick() {
           : parseFloat(
               gameState.actualValue +
                 gameState.actualValue * (gameState.factorValue / 100)
-            ).toFixed(2);
+            );
 
       if (gameState.amountToGift <= 0) {
         await getNewGift();
@@ -250,8 +292,10 @@ function setCardClick() {
           : parseFloat(
               gameState.actualValue -
                 gameState.actualValue * (gameState.factorValue / 100)
-            ).toFixed(2);
+            );
     }
+
+    gameState.actualValue = parseFloat(gameState.actualValue.toFixed(2));
 
     updateValuesUI();
     setRandomIds();
@@ -305,9 +349,13 @@ function updateValuesUI() {
   gameState.factorValue = randomize();
 
   factorValueSpan.innerHTML = `${gameState.factorValue}%`;
-  actualValueSpan.innerHTML = `R$ ${parseFloat(gameState.actualValue).toFixed(
-    2
-  )}`;
+  actualValueSpan.innerHTML = parseFloat(gameState.actualValue).toLocaleString(
+    "pt-br",
+    {
+      style: "currency",
+      currency: "BRL",
+    }
+  );
 
   gameState.gifts = getGifts();
   if (!gameState.gifts) gameState.gifts = [];
@@ -357,7 +405,10 @@ async function getNewGift() {
 }
 
 function getGifts() {
-  return JSON.parse(localStorage.getItem(giftsKeyName));
+  const gifts = JSON.parse(localStorage.getItem(giftsKeyName));
+
+  if (!gifts) return [];
+  return gifts;
 }
 
 function saveGift() {
@@ -379,7 +430,7 @@ function showGifts() {
   }
 
   // Adiciona os gifts atuais
-  gameState.gifts.forEach((gift) => {
+  gameState.gifts?.forEach((gift) => {
     const objGift = new GiftSkin(gift);
 
     const giftElement = document.createElement("div");
@@ -400,8 +451,7 @@ function showGifts() {
     containerGift.appendChild(giftElement);
   });
 
-  // Exibe o modal
-  modal.style.display = "block";
+  openModal(modal);
 
   // Função para fechar o modal
   function closeModal() {
@@ -426,5 +476,15 @@ function deleteGifts() {
   gameState.gifts = [];
   gameState.amountToGift = amountToGift;
   localStorage.removeItem(giftsKeyName);
+}
+//#endregion
+
+//#region Modal
+function closeModal(modalElement) {
+  modalElement.style.display = "none";
+}
+
+function openModal(modalElement) {
+  modalElement.style.display = "block";
 }
 //#endregion
