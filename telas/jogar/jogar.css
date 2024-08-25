@@ -92,3 +92,141 @@
   border-radius: 5px;
   font-weight: bold;
 }
+
+/* Modal */
+/* Estilo para o modal */
+.modal {
+  display: none; /* Escondido por padrão */
+  position: fixed; /* Fica fixo na tela */
+  z-index: 1; /* Colocado à frente de outros elementos */
+  left: 0;
+  top: 0;
+  width: 100%; /* Largura total da tela */
+  height: 100%; /* Altura total da tela */
+  overflow: auto; /* Permite rolar o conteúdo se necessário */
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo escurecido */
+}
+
+/* Estilo para o conteúdo do modal */
+.modal-content {
+  background-color: #fff;
+  margin: 5% auto; /* Centraliza o modal verticalmente */
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 800px; /* Limite máximo de largura */
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+  animation: modalopen 0.5s; /* Animação de abertura */
+}
+
+/* Animação de abertura do modal */
+@keyframes modalopen {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilo do botão de fechar (x) */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Estilo para o título principal */
+.modal-content h1 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Estilo para o container de presente */
+.gift-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+
+.gift {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.gift h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.gift img {
+  width: 100%;
+  max-width: 150px; /* Limite máximo de largura da imagem */
+  height: auto;
+  margin-bottom: 15px;
+}
+
+.gift p {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Estilo para o botão de fechar */
+#closeModalBtn {
+  display: block;
+  margin: 20px auto 0 auto;
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+#closeModalBtn:hover {
+  background-color: #45a049;
+}
+
+/* Estilo para dispositivos móveis */
+@media (max-width: 600px) {
+  .modal-content {
+    width: 95%; /* Reduz a largura em dispositivos móveis */
+    margin: 10% auto; /* Ajusta a margem para centralizar */
+    padding: 15px;
+  }
+
+  .gift-container {
+    grid-template-columns: 1fr; /* Uma coluna em dispositivos móveis */
+    gap: 15px;
+  }
+
+  .gift h3 {
+    font-size: 16px;
+  }
+
+  .gift p {
+    font-size: 12px;
+  }
+
+  #closeModalBtn {
+    width: 100%; /* Botão de fechar ocupa a largura total */
+    padding: 12px;
+  }
+}

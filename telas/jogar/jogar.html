@@ -31,6 +31,16 @@
       </a>
     </header>
 
+    <section>
+      <div id="myModal" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <h1>Seus presentes</h1>
+          <div class="gift-container" id="gift-container"></div>
+          <button id="closeModalBtn">Fechar</button>
+        </div>
+      </div>
+    </section>
     <section class="center-main-content">
       <div class="game-info">
         <div class="balance-factor">
@@ -39,19 +49,15 @@
         </div>
         <div class="next-level">
           <div class="level-info d-flex align-center">
-            <p>
-              Você possui 5
-              <i class="fa fa-gift icon-gift" style="font-size: x-large"></i>
-            </p>
+            <p id="amountGifts">Você possui 5</p>
+            <i class="fa fa-gift icon-gift" style="font-size: x-large"></i>
           </div>
           <div class="level-info d-flex align-center">
-            <p>
-              Acerte 5 para o próximo
-
-              <i class="fa fa-gift icon-gift" style="font-size: x-large"></i>
-            </p>
+            <p id="amountToGift">Acerte 5 para o próximo</p>
+            <i class="fa fa-gift icon-gift" style="font-size: x-large"></i>
           </div>
         </div>
+        <h3 id="countdown"></h3>
       </div>
     </section>
 
@@ -122,7 +128,7 @@
       <button id="play" class="btn mb-3">Jogar</button>
     </div>
 
-    <footer class="bg-primary">
+    <footer class="bg-primary mt-3">
       <div class="footer-column">
         <a href="https://disneyapi.dev" target="_blank" class="footer-link">
           <p class="footer-text">Disney API</p>
@@ -149,6 +155,6 @@
       </div>
     </footer>
 
-    <script src="./js/jogar.js"></script>
+    <script type="module" src="./js/jogar.js"></script>
   </body>
 </html>

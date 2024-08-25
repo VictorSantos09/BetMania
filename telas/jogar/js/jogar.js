@@ -1,23 +1,30 @@
+import { GiftSkin } from "./gift.js";
+
 const gameState = {
   idsCharacters: [],
   idsCharactersPrevious: [],
   correctCard: null,
   factorValue: randomize(),
   actualValue: 1,
+  amountToGift: 5,
+  gifts: [],
 };
 
+const giftsKeyName = "gifts";
+const amountToGift = 5;
 const apiUrl = "https://rickandmortyapi.com/api/character/";
 const cardImageId = "card-img-";
 const querySelectorCard = ".card";
 const pathCard =
   "https://raw.githubusercontent.com/VictorSantos09/BetMania/main/assets/card.png";
-const btnPlay = document.getElementById("play");
-const actualValueSpan = document.getElementById("actualValue");
-const factorValueSpan = document.getElementById("factor");
 const amountCards = 3;
 const largeAwaitTimeMs = 4500;
 const mediumAwaitTimeMs = largeAwaitTimeMs / 2;
 const smallAwaitTime = mediumAwaitTimeMs / 2;
+
+const btnPlay = document.getElementById("play");
+const actualValueSpan = document.getElementById("actualValue");
+const factorValueSpan = document.getElementById("factor");
 
 // Inicializa valores de UI e configura o botão de play
 updateValuesUI();
@@ -176,6 +183,8 @@ function setPlayButton() {
     setRandomIds();
     await setImageCharacter();
     setCorrectAnswer();
+
+    countDown(largeAwaitTimeMs);
     await showCorrectAnswerTemporary();
 
     await new Promise((resolve) => {
@@ -203,6 +212,7 @@ function setCardClick() {
 
       await new Promise((resolve) => {
         setTimeout(async () => {
+          countDown(largeAwaitTimeMs);
           await continuar(card);
           undoFlipCard(card);
           resolve();
@@ -212,8 +222,12 @@ function setCardClick() {
   });
 
   async function continuar(card) {
+    gameState.actualValue = parseFloat(gameState.actualValue);
+
     if (card === gameState.correctCard) {
       await showCorrectAnswerTemporary();
+      gameState.amountToGift--;
+
       gameState.actualValue =
         gameState.actualValue <= 0 || !gameState.actualValue
           ? 1
@@ -221,7 +235,14 @@ function setCardClick() {
               gameState.actualValue +
                 gameState.actualValue * (gameState.factorValue / 100)
             ).toFixed(2);
+
+      if (gameState.amountToGift <= 0) {
+        await getNewGift();
+        gameState.amountToGift = amountToGift;
+      }
     } else {
+      deleteGifts();
+
       await showBothWrongCorrectTemporary(card);
       gameState.actualValue =
         gameState.actualValue <= 0 || !gameState.actualValue
@@ -281,8 +302,129 @@ function hideWrongAnswer(wrongCard) {
 //#endregion
 
 function updateValuesUI() {
+  gameState.factorValue = randomize();
+
   factorValueSpan.innerHTML = `${gameState.factorValue}%`;
   actualValueSpan.innerHTML = `R$ ${parseFloat(gameState.actualValue).toFixed(
     2
   )}`;
+
+  gameState.gifts = getGifts();
+  if (!gameState.gifts) gameState.gifts = [];
+
+  let amountGifts = 0;
+  if (gameState.gifts.length > 0) amountGifts = gameState.gifts.length;
+
+  document.getElementById(
+    "amountGifts"
+  ).innerHTML = `Você possui ${amountGifts}`;
+
+  document.getElementById(
+    "amountToGift"
+  ).innerHTML = `Acerte ${gameState.amountToGift} para o próximo`;
 }
+
+//#region Contagem
+function countDown(factor) {
+  const countDown = document.getElementById("countdown");
+  let count = factor / 1000;
+  countDown.innerHTML = appendSeconds(count);
+  const interval = setInterval(() => {
+    count--;
+    countDown.innerHTML = appendSeconds(count);
+    if (count <= 0) {
+      clearInterval(interval);
+      countDown.innerHTML = "";
+    }
+  }, 1000);
+
+  function appendSeconds(count) {
+    return count + "s";
+  }
+}
+//#endregion
+
+//#region Gift
+async function getNewGift() {
+  const response = await fetch("../../../public/skins-csgo.json");
+  const data = await response.json();
+  const randomIndex = randomize(data.length);
+  const randomSkin = data[randomIndex];
+
+  gameState.gifts.push(randomSkin);
+  saveGift();
+  showGifts();
+}
+
+function getGifts() {
+  return JSON.parse(localStorage.getItem(giftsKeyName));
+}
+
+function saveGift() {
+  localStorage.setItem(giftsKeyName, JSON.stringify(gameState.gifts));
+}
+
+function showGifts() {
+  const modal = document.getElementById("myModal");
+  const closeBtn = document.querySelector(".close");
+  const closeModalBtn = document.getElementById("closeModalBtn");
+
+  gameState.gifts = getGifts();
+
+  const containerGift = document.getElementById("gift-container");
+
+  // Remove os gifts anteriores
+  while (containerGift.firstChild) {
+    containerGift.removeChild(containerGift.firstChild);
+  }
+
+  // Adiciona os gifts atuais
+  gameState.gifts.forEach((gift) => {
+    const objGift = new GiftSkin(gift);
+
+    const giftElement = document.createElement("div");
+    giftElement.classList.add("gift");
+
+    const giftTitle = document.createElement("h3");
+    giftTitle.textContent = objGift.name;
+    giftElement.appendChild(giftTitle);
+
+    const giftDescription = document.createElement("p");
+    giftDescription.textContent = objGift.description;
+    giftElement.appendChild(giftDescription);
+
+    const giftImage = document.createElement("img");
+    giftImage.src = objGift.image;
+    giftImage.alt = objGift.name;
+    giftElement.appendChild(giftImage);
+    containerGift.appendChild(giftElement);
+  });
+
+  // Exibe o modal
+  modal.style.display = "block";
+
+  // Função para fechar o modal
+  function closeModal() {
+    modal.style.display = "none";
+  }
+
+  // Evento de clique no botão de fechar (X)
+  closeBtn.onclick = closeModal;
+
+  // Evento de clique no botão "Fechar"
+  closeModalBtn.onclick = closeModal;
+
+  // Fecha o modal se clicar fora dele
+  window.onclick = function (event) {
+    if (event.target === modal) {
+      closeModal();
+    }
+  };
+}
+
+function deleteGifts() {
+  gameState.gifts = [];
+  gameState.amountToGift = amountToGift;
+  localStorage.removeItem(giftsKeyName);
+}
+//#endregion
