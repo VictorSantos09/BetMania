@@ -4,7 +4,8 @@ document.addEventListener("DOMContentLoaded", function () {
     .then((data) => {
       document.getElementById("header-placeholder").innerHTML = data;
     })
-    .catch((error) =>
-      console.error("Não foi possível carregar o header. Erro:", error)
-    );
+    .catch((error) => {
+      console.error("Não foi possível carregar o header. Erro:", error);
+      alert("Não foi possível carregar o header");;
+    });
 });

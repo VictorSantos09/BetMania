@@ -4,7 +4,8 @@ document.addEventListener("DOMContentLoaded", function () {
     .then((data) => {
       document.getElementById("footer-placeholder").innerHTML = data;
     })
-    .catch((error) =>
-      console.error("Não foi possível carregar o footer. Erro:", error)
-    );
+    .catch((error) => {
+      console.error("Não foi possível carregar o footer. Erro:", error);
+      alert("Não foi possível carregar o footer");
+    });
 });
